@@ -8,6 +8,7 @@
 
 #import "PhotoLibraryViewController.h"
 #import "CustomIOS7AlertView.h"
+#import "EditWithStickerViewController.h"
 
 /*helpers*/
 #import "MFSideMenu.h"
@@ -120,7 +121,7 @@
     [alertView setContainerView:[self createPhotoEditMenu]];
     
     // Modify the parameters
-    [alertView setButtonTitles:[NSMutableArray arrayWithObjects:@"Close1", @"Close2", @"Close3", nil]];
+    [alertView setButtonTitles:[NSMutableArray arrayWithObjects:@"Cancel", nil]];
     [alertView setDelegate:self];
     
     // You may use a Block, rather than a delegate.
@@ -138,13 +139,34 @@
 #pragma mark - alert view content
 - (UIView *)createPhotoEditMenu
 {
-    UIView *demoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 290, 200)];
+    UIView *createPhotoEditMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 290, 210)];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 270, 180)];
-    [imageView setImage:[UIImage imageNamed:@"tester.png"]];
-    [demoView addSubview:imageView];
+    UIButton *editWithStickerButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 270, 60)];
+    [editWithStickerButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
+    [editWithStickerButton setTitle:@"edit" forState:UIControlStateNormal];
+    [editWithStickerButton addTarget:self action:@selector(editPhoto) forControlEvents:UIControlEventTouchDragInside];
+    [createPhotoEditMenuView addSubview:editWithStickerButton];
     
-    return demoView;
+    UIButton *deletePhotoButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 70, 270, 60)];
+    [deletePhotoButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
+    [deletePhotoButton setTitle:@"delete" forState:UIControlStateNormal];
+    [deletePhotoButton addTarget:self action:@selector(deletePhoto) forControlEvents:UIControlEventTouchDragInside];
+    [createPhotoEditMenuView addSubview:deletePhotoButton];
+
+    UIButton *exportPhotoButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 130, 270, 60)];
+    [exportPhotoButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
+    [exportPhotoButton setTitle:@"export" forState:UIControlStateNormal];
+    [exportPhotoButton addTarget:self action:@selector(exportPhoto) forControlEvents:UIControlEventTouchDragInside];
+    [createPhotoEditMenuView addSubview:exportPhotoButton];
+    
+    return createPhotoEditMenuView;
+}
+
+#pragma mark - custom alert view delegate
+- (void)customIOS7dialogButtonTouchUpInside: (CustomIOS7AlertView *)alertView clickedButtonAtIndex: (NSInteger)buttonIndex
+{
+    NSLog(@"Delegate: Button at position %d is clicked on alertView %d.", (int)buttonIndex, (int)[alertView tag]);
+    [alertView close];
 }
 
 #pragma mark - Assets Picker Delegate
@@ -189,6 +211,23 @@
     }
     
     return (picker.selectedAssets.count < 10 && asset.defaultRepresentation != nil);
+}
+
+#pragma mark - edit photo button
+- (void) editPhoto
+{
+    EditWithStickerViewController *editWithStickerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"editWithStickerView"];
+    [self presentViewController:editWithStickerViewController animated:YES completion:nil];
+}
+
+- (void) deletePhoto
+{
+    
+}
+
+- (void) exportPhoto
+{
+    
 }
 
 @end

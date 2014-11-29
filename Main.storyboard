@@ -79,6 +79,24 @@
             </objects>
             <point key="canvasLocation" x="375" y="1127"/>
         </scene>
+        <!--Edit With Sticker View Controller-->
+        <scene sceneID="rga-dq-2FW">
+            <objects>
+                <viewController storyboardIdentifier="editWithStickerView" id="KTX-lW-dok" customClass="EditWithStickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8oX-N4-T49"/>
+                        <viewControllerLayoutGuide type="bottom" id="G7g-G2-px3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fgT-en-7Op">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1OP-4O-gNR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1060" y="1127"/>
+        </scene>
         <!--Shop View Controller-->
         <scene sceneID="diJ-uw-6BX">
             <objects>
