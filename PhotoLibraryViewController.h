@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PhotoLibraryCollectionView.h"
 
 @interface PhotoLibraryViewController : UIViewController
+@property (weak, nonatomic) IBOutlet PhotoLibraryCollectionView *collectionView;
 
 @end
