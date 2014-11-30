@@ -14,7 +14,13 @@
 #import "MFSideMenu.h"
 #import "CTAssetsPickerController.h"
 
+/*define*/
+#define PHOTO_LIB_ASSETS @"photoLibraryAssets"
+
 @interface PhotoLibraryViewController ()<CTAssetsPickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, CustomIOS7AlertViewDelegate>
+{
+    CustomIOS7AlertView *photoEditCustomAlertView;
+}
 
 @property (nonatomic, copy) NSArray *assets;
 
@@ -89,8 +95,10 @@
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
     
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    NSArray *assets = [userDefaults objectForKey:PHOTO_LIB_ASSETS];
+    
     ALAsset *asset = [self.assets objectAtIndex:indexPath.row];
-//    cell.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithCGImage:asset.thumbnail]];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:asset.thumbnail]];
     [cell setBackgroundView:imageView];
     
@@ -115,25 +123,25 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // Here we need to pass a full frame
-    CustomIOS7AlertView *alertView = [[CustomIOS7AlertView alloc] init];
+    photoEditCustomAlertView = [[CustomIOS7AlertView alloc] init];
     
     // Add some custom content to the alert view
-    [alertView setContainerView:[self createPhotoEditMenu]];
+    [photoEditCustomAlertView setContainerView:[self createPhotoEditMenu]];
     
     // Modify the parameters
-    [alertView setButtonTitles:[NSMutableArray arrayWithObjects:@"Cancel", nil]];
-    [alertView setDelegate:self];
+    [photoEditCustomAlertView setButtonTitles:[NSMutableArray arrayWithObjects:@"Cancel", nil]];
+    [photoEditCustomAlertView setDelegate:self];
     
     // You may use a Block, rather than a delegate.
-    [alertView setOnButtonTouchUpInside:^(CustomIOS7AlertView *alertView, int buttonIndex) {
+    [photoEditCustomAlertView setOnButtonTouchUpInside:^(CustomIOS7AlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         [alertView close];
     }];
     
-    [alertView setUseMotionEffects:true];
+    [photoEditCustomAlertView setUseMotionEffects:true];
     
     // And launch the dialog
-    [alertView show];
+    [photoEditCustomAlertView show];
 }
 
 #pragma mark - alert view content
@@ -144,19 +152,19 @@
     UIButton *editWithStickerButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 270, 60)];
     [editWithStickerButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
     [editWithStickerButton setTitle:@"edit" forState:UIControlStateNormal];
-    [editWithStickerButton addTarget:self action:@selector(editPhoto) forControlEvents:UIControlEventTouchDragInside];
+    [editWithStickerButton addTarget:self action:@selector(editPhoto) forControlEvents:UIControlEventTouchUpInside];
     [createPhotoEditMenuView addSubview:editWithStickerButton];
     
     UIButton *deletePhotoButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 70, 270, 60)];
     [deletePhotoButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
     [deletePhotoButton setTitle:@"delete" forState:UIControlStateNormal];
-    [deletePhotoButton addTarget:self action:@selector(deletePhoto) forControlEvents:UIControlEventTouchDragInside];
+    [deletePhotoButton addTarget:self action:@selector(deletePhoto) forControlEvents:UIControlEventTouchUpInside];
     [createPhotoEditMenuView addSubview:deletePhotoButton];
 
     UIButton *exportPhotoButton         = [[UIButton alloc] initWithFrame:CGRectMake(10, 130, 270, 60)];
     [exportPhotoButton setImage:[UIImage imageNamed:@"tester.png"] forState:UIControlStateNormal];
     [exportPhotoButton setTitle:@"export" forState:UIControlStateNormal];
-    [exportPhotoButton addTarget:self action:@selector(exportPhoto) forControlEvents:UIControlEventTouchDragInside];
+    [exportPhotoButton addTarget:self action:@selector(exportPhoto) forControlEvents:UIControlEventTouchUpInside];
     [createPhotoEditMenuView addSubview:exportPhotoButton];
     
     return createPhotoEditMenuView;
@@ -181,6 +189,8 @@
     [picker.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     
     self.assets = [NSMutableArray arrayWithArray:assets];
+//    [self saveAssetDataArray:self.assets];
+    
     [self.collectionView reloadData];
 }
 
@@ -216,6 +226,7 @@
 #pragma mark - edit photo button
 - (void) editPhoto
 {
+    [photoEditCustomAlertView close];
     EditWithStickerViewController *editWithStickerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"editWithStickerView"];
     [self presentViewController:editWithStickerViewController animated:YES completion:nil];
 }
@@ -229,5 +240,18 @@
 {
     
 }
+
+#pragma mark - save assets onto device
+//- (void)saveAssetDataArray:(NSArray *)assets {
+//    
+//    NSMutableArray *archiveArray = [NSMutableArray arrayWithCapacity:assets.count];
+//    for (ALAsset *asset in assets) {
+//        NSData *assetData = [NSKeyedArchiver archivedDataWithRootObject:asset];
+//        [archiveArray addObject:assetData];
+//    }
+//    
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    [userDefaults setObject:archiveArray forKey:PHOTO_LIB_ASSETS];
+//}
 
 @end
